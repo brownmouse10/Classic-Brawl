@@ -77,7 +77,7 @@ class PlayerProfileMessage(Writer):
         self.writeVint(20)
 
         self.writeString(self.name)
-        self.writeVint(1)
+        self.writeVint(100)
         self.writeVint(28000000 + self.profileIcon) # Profile icon
         self.writeVint(43000000 + self.namecolor) # Name color
 
