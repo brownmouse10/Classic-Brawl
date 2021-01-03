@@ -54,7 +54,7 @@ class AllianceDataMessage(Writer):
         for id in range(len(self.plrids)):
             DataBase.GetMemberData(self, self.plrids[id])
 
-            self.writeInt(0)                                # High Id
+            self.writeInt(0)                                    # High Id
             self.writeInt(self.plrids[id])                      # Low Id
 
             self.writeVint(self.plrrole)                        # player club role | 0 = Nothing, 1 = Member, 2 = President, 3 = Senior, 4 = Vice President
@@ -63,6 +63,6 @@ class AllianceDataMessage(Writer):
             self.writeVint(0)
             self.writeVint(0)
             self.writeString(self.plrname)
-            self.writeVint(1)
+            self.writeVint(100)
             self.writeVint(28000000 + self.plricon)
             self.writeVint(43000000 + self.plrnamecolor)

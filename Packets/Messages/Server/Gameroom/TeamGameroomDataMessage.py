@@ -8,6 +8,7 @@ class TeamGameroomDataMessage(Writer):
         super().__init__(client)
         self.id = 24124
         self.player = player
+        self.playerCount = 2
 
     def encode(self):
         self.writeVint(1)
@@ -30,42 +31,45 @@ class TeamGameroomDataMessage(Writer):
         self.writeVint(0)
         self.writeVint(0)
         self.writeVint(0)
-        self.writeVint(15)
-        self.writeVint(self.player.mapID) # map ID
-        self.writeVint(1)
-        self.writeVint(1)
-        self.writeVint(0)
-        self.writeVint(0)
-        self.writeVint(0)
-        self.writeInt(0)  # HighID
-        self.writeInt(self.player.LowID)  # low id
-        self.writeVint(16)
-        self.writeVint(self.player.brawlerID)
-        self.writeVint(0)
-        self.writeVint(99999)
-        self.writeVint(99999)
-        self.writeVint(1)
-        self.writeVint(3)
-        self.writeVint(0)
-        self.writeVint(0)
-        self.writeVint(0)
-        self.writeVint(0)
-        self.writeString(self.player.name) # player name
-        self.writeVint(100)
-        self.writeVint(28000000)
-        self.writeVint(43000000)
-        self.writeVint(23)
-        self.writeVint(self.player.starpower)
-        if self.player.useGadget == 1:
-            self.writeVint(23)
-            self.writeVint(self.player.gadget)
-        else:
-           self.writeVint(0)
-           self.writeVint(0)
+
+        self.writeScId(15, self.player.mapID)               # MapID
+
+        for i in range(1, self.playerCount + 1):
+            # Player
+            self.writeVint(self.playerCount)                    # Player count
+
+
+            self.writeVint(1)                               # Gameroom owner boolean
+            self.writeInt(self.player.HighID)               # HighID
+            self.writeInt(self.player.LowID)                # LowID
+
+            self.writeScId(16, self.player.brawlerID)           # BrawlerID
+
+            self.writeVint(0)                                   #
+            self.writeVint(0)                                   # Unknown
+            self.writeVint(0)                                   # Unknown
+            self.writeVint(0)                                   #
+
+            self.writeVint(3)                                  # Player State | 11: Events, 10: Brawlers, 9: Writing..., 8: Training, 7: Spectactor, 6: Offline, 5: End Combat Screen, 4: Searching, 3: Not Ready, 2: AFK, 1: In Combat, 0: OffLine
+            self.writeBoolean(False)                            # Is ready
+            self.writeBoolean(False)                            # Team | 0: Blue, 1: Red
+
+            self.writeVint(0)
+            self.writeVint(0)
+
+            self.writeString(self.player.name)                  # Player name
+            self.writeVint(100)
+            self.writeVint(28000000 + self.player.profileIcon)  # Player icon
+            self.writeVint(43000000 + self.player.namecolor)    # Player name color
+
+            if self.player.useGadget == 1:
+                self.writeScId(23, self.player.starpower)       # Starpower
+                self.writeScId(23, self.player.gadget)          # Gadget
+            else:
+                self.writeScId(23, self.player.starpower)       # Starpower
+                self.writeScId(0, 0)                            # Gadget
 
         self.writeVint(0)
         self.writeVint(0)
         self.writeVint(0)
         self.writeVint(6)
-        self.writeHexa('''FF-FF-00-00-00-00-00''')
-
