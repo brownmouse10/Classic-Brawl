@@ -1,3 +1,4 @@
+from Packets.Messages.Server.Alliance.Events.AllianceRoleChangedOKMessage import AllianceRoleChangedOKMessage
 from Utils.Helpers import Helpers
 from Database.DataBase import DataBase
 from random import choice
@@ -25,3 +26,4 @@ class Promote_Alliance_Member_Message(BSMessageReader):
         DataBase.replaceOtherValue(self, self.TargetLowID, 'clubRole', self.TargetedRole)
         
         # Sending confirmation and updated data
+        AllianceRoleChangedOKMessage(self.client, self.player).send()

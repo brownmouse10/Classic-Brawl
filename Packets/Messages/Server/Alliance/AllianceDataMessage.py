@@ -54,11 +54,7 @@ class AllianceDataMessage(Writer):
         for id in range(len(self.plrids)):
             DataBase.GetMemberData(self, self.plrids[id])
 
-            if self.plrname == self.player.name:
-                self.writeInt(0)
-            else:
-                self.writeInt(1)                                # High Id
-
+            self.writeInt(0)                                # High Id
             self.writeInt(self.plrids[id])                      # Low Id
 
             self.writeVint(self.plrrole)                        # player club role | 0 = Nothing, 1 = Member, 2 = President, 3 = Senior, 4 = Vice President

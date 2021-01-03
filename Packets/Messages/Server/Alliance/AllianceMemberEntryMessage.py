@@ -13,8 +13,8 @@ class AllianceMemberEntryMessage(Writer):
         self.writeInt(0) # Club HighID
         self.writeInt(self.player.ClubID) # Club LowID
         
-        self.writeVint(self.player.HighID)
-        self.writeVint(self.player.LowID)
+        self.writeInt(self.player.HighID)
+        self.writeInt(self.player.LowID)
         self.writeString(self.player.name) # Player name
         self.writeVint(100)
         self.writeVint(28000000 + self.player.profileIcon) # Profile icon

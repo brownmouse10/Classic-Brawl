@@ -83,6 +83,8 @@ class Players:
 	bigBoxes = settings['BigBoxTokens']
 	starPoints = settings['Starpoints']
 
+	testid = 0
+
 	# Alliances
 	ClubHighID = 0
 	ClubID = 0

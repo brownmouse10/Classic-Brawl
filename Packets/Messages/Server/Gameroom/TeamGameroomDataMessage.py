@@ -37,7 +37,7 @@ class TeamGameroomDataMessage(Writer):
         self.writeVint(0)
         self.writeVint(0)
         self.writeVint(0)
-        self.writeVint(0)  # high id
+        self.writeInt(0)  # HighID
         self.writeInt(self.player.LowID)  # low id
         self.writeVint(16)
         self.writeVint(self.player.brawlerID)
@@ -62,6 +62,7 @@ class TeamGameroomDataMessage(Writer):
         else:
            self.writeVint(0)
            self.writeVint(0)
+
         self.writeVint(0)
         self.writeVint(0)
         self.writeVint(0)

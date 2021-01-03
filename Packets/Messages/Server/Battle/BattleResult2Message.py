@@ -11,7 +11,7 @@ class BattleResult2Message(Writer):
 
     def encode(self):
         self.writeVint(1)
-        self.writeVint(self.player.GameType)
+        self.writeVint(self.player.BattleResult)
 
         brawler_trophies = self.player.BrawlersTrophies[str(self.player.brawlerID)]
         brawler_trophies_for_rank = self.player.BrawlersTrophiesForRank[str(self.player.brawlerID)]
