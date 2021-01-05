@@ -18,5 +18,5 @@ class AnalyticsEventMessage(BSMessageReader):
         self.Event = self.read_string()
 
     def process(self):
-        if self.player.debug == False:
-            print("[INFO] " + self.Type + " " + self.Event)
+        #print("[INFO] " + self.Type + " " + self.Event)
+        pass

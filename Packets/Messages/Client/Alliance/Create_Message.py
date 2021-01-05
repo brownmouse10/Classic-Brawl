@@ -1,6 +1,4 @@
 from time import daylight
-from Utils.Helpers import Helpers
-from Database.DataBase import DataBase
 from random import choice
 from string import ascii_uppercase
 import json
@@ -9,6 +7,8 @@ from Logic.Player import Players
 from Packets.Messages.Server.Alliance.MyAllianceMessage import MyAllianceMessage
 from Packets.Messages.Server.Alliance.AllianceStreamMessage import AllianceStreamMessage
 from Packets.Messages.Server.Alliance.Events.AllianceJoinOkMessage import AllianceJoinOkMessage
+from Database.DatabaseManager import DataBase
+from Utils.Helpers import Helpers
 
 from Utils.Reader import BSMessageReader
 

@@ -1,6 +1,6 @@
 from os import truncate
 from Utils.Writer import Writer
-from Database.DataBase import DataBase
+from Database.DatabaseManager import DataBase
 
 
 class PlayerProfileMessage(Writer):

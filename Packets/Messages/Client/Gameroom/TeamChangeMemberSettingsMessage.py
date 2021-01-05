@@ -1,5 +1,5 @@
 from Packets.Messages.Server.Gameroom.TeamGameroomDataMessage import TeamGameroomDataMessage
-from Database.DataBase import DataBase
+from Database.DatabaseManager import DataBase
 
 from Utils.Reader import BSMessageReader
 
@@ -552,5 +552,8 @@ class TeamChangeMemberSettingsMessage(BSMessageReader):
 
             DataBase.replaceValue(self, 'starpower', self.player.starpower)
             DataBase.replaceValue(self, 'gadget', self.player.gadget)
+            DataBase.replaceGameroomValue(self, 'brawlerID', self.player.brawlerID, "player")
+            DataBase.replaceGameroomValue(self, 'starpower', self.player.starpower, "player")
+            DataBase.replaceGameroomValue(self, 'gadget', self.player.gadget, "player")
 
             TeamGameroomDataMessage(self.client, self.player).send()

@@ -8,13 +8,25 @@ class FriendListMessage(Writer):
         self.player = player
 
     def encode(self):
-        self.writeVint(0)
-        self.writeVint(0)
+        self.writeInt(1)
+        self.writeInt(1)
 
         self.writeInt(0) # HighID
         self.writeInt(323426908) # LowID
         
         self.writeString("Gaby")
+        self.writeString(self.player.FacebookID)
+        self.writeString()
+
+        self.writeString()
+
         self.writeVint(100)
+        self.writeVint(1000)
+
+        self.writeString()
+        self.writeInt(0)
+        self.writeVint(1)
+        
+        self.writeString()
         self.writeVint(28000000)
         self.writeVint(43000000)

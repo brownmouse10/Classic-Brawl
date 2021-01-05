@@ -1,6 +1,6 @@
 from Packets.Messages.Server.Alliance.AllianceStreamMessage import AllianceStreamMessage
 from Utils.Helpers import Helpers
-from Database.DataBase import DataBase
+from Database.DatabaseManager import DataBase
 from random import choice
 from string import ascii_uppercase
 import json

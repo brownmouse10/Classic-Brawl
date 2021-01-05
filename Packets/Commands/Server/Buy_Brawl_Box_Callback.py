@@ -3,7 +3,7 @@ import json
 from os import read
 from Utils.Writer import Writer
 import random
-from Database.DataBase import DataBase
+from Database.DatabaseManager import DataBase
 from Logic.Boxes import Boxes
 
 class ServerBox(Writer):

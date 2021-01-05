@@ -1,5 +1,5 @@
 from Utils.Writer import Writer
-from Database.DataBase import DataBase
+from Database.DatabaseManager import DataBase
 
 
 class BattleResultMessage(Writer):
@@ -455,10 +455,5 @@ class BattleResultMessage(Writer):
         self.writeVint(0)
         self.writeVint(0)
         self.writeVint(28)
-        self.writeVint(0)
-        self.writeVint(0)
-        self.writeVint(-1040385)
-        self.writeVint(0)
-        self.writeVint(0)
         self.writeVint(0)
         self.writeVint(0)

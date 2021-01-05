@@ -1,5 +1,7 @@
-from Database.DataBase import DataBase
+from Database.DatabaseManager import DataBase
+from Utils.Config import Config
 
+packet_settings = Config.GetValue()
 
 class Writer:
     def __init__(self, client, endian: str = 'big'):
@@ -44,7 +46,8 @@ class Writer:
             self.writeInt16(0)
         self.buffer += packet + b'\xff\xff\x00\x00\x00\x00\x00'
         self.client.send(self.buffer)
-        print(self.id, self.__class__.__name__)
+        if packet_settings["ShowPacketsInLog"] == True:
+            print(self.id, self.__class__.__name__)
 
     def sendToAll(self):
         if self.player.ClubID != 0:
@@ -63,7 +66,8 @@ class Writer:
                     if self.ClubID == self.player.ClubID:
                         self.player.ClientDict["Clients"][str(client_id)]["SocketInfo"].send(self.buffer)
                 break
-            print(self.id, self.__class__.__name__)
+            if packet_settings["ShowPacketsInLog"] == True:
+                print(self.id, self.__class__.__name__)
 
     def sendToOthers(self):
         if self.player.ClubID != 0:
@@ -82,6 +86,27 @@ class Writer:
                     if client_id != self.player.LowID and self.ClubID == self.player.ClubID:
                         self.player.ClientDict["Clients"][str(client_id)]["SocketInfo"].send(self.buffer)
                 break
+            if packet_settings["ShowPacketsInLog"] == True:
+                print(self.id, self.__class__.__name__)
+
+    def sendWithLowID(self, low_id):
+        self.encode()
+        packet = self.buffer
+        self.buffer = self.id.to_bytes(2, 'big', signed=True)
+        self.writeInt(len(packet), 3)
+        if hasattr(self, 'version'):
+            self.writeInt16(self.version)
+        else:
+            self.writeInt16(0)
+        self.buffer += packet + b'\xff\xff\x00\x00\x00\x00\x00'
+        for Client in range(self.player.ClientDict["ClientCounts"]):
+            for client_id, value in self.player.ClientDict["Clients"].items():
+                print(client_id)
+                if client_id == low_id:
+                    DataBase.loadOtherAccount(self, int(client_id))
+                    self.player.ClientDict["Clients"][str(client_id)]["SocketInfo"].send(self.buffer)
+                    break
+        if packet_settings["ShowPacketsInLog"] == True:
             print(self.id, self.__class__.__name__)
         
 

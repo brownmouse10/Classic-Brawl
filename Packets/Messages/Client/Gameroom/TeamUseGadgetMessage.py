@@ -1,4 +1,5 @@
 from Packets.Messages.Server.Gameroom.TeamGameroomDataMessage import TeamGameroomDataMessage
+from Database.DatabaseManager import DataBase
 
 from Utils.Reader import BSMessageReader
 
@@ -11,6 +12,11 @@ class TeamUseGadgetMessage(BSMessageReader):
 
     def decode(self):
         self.player.useGadget = self.read_Vint()
+        self.boolean = self.read_Vint()
+        DataBase.replaceGameroomValue(self, 'useGadget', self.boolean, "room") 
+        self.boolean = self.read_Vint()
+        print(self.boolean)
+        DataBase.replaceGameroomValue(self, 'useGadget', self.boolean, "room")
 
     def process(self):
         TeamGameroomDataMessage(self.client, self.player).send()

@@ -1,5 +1,4 @@
-import time
-
+from Logic.Facebook import Facebook
 from Utils.Writer import Writer
 
 
@@ -20,7 +19,7 @@ class LoginOkMessage(Writer):
         
         self.writeString(self.player.Token)  # Token
 
-        self.writeString() # FacebookID
+        self.writeString(self.player.FacebookID) # FacebookID
         self.writeString() # GamecenterID
 
         self.writeInt(26)  # MajorVersion
@@ -33,7 +32,7 @@ class LoginOkMessage(Writer):
         self.writeInt(0)  
         self.writeInt(0)
 
-        self.writeString()  
+        self.writeString()
         self.writeString() 
         self.writeString()
 

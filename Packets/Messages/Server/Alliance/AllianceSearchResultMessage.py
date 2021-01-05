@@ -1,5 +1,5 @@
 from Utils.Writer import Writer
-from Database.DataBase import DataBase
+from Database.DatabaseManager import DataBase
 import json
 
 
@@ -15,7 +15,7 @@ class AllianceSearchResultMessage(Writer):
     def encode(self):
         self.writeString(self.requestedName)
         self.writeVint(self.allianceCount)
-        with open('club.db', 'r') as read_data:
+        with open('Database/Club/club.db', 'r') as read_data:
             for club in read_data.readlines():
 
                 clubData = json.loads(club)

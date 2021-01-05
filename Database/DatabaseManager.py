@@ -1,6 +1,6 @@
 from Logic.Player import Players
 import json
-from os import read
+from os import read, remove
 import string
 import random
 from typing import Dict
@@ -8,9 +8,8 @@ from Utils.Helpers import Helpers
 from Files.CsvLogic.Characters import Characters
 
 class DataBase:
-
     def loadAccount(self):
-        with open('data.db', 'r') as read_data:
+        with open('Database/Player/data.db', 'r') as read_data:
             for line in read_data.readlines():
 
                 json_data = json.loads(line)
@@ -19,6 +18,9 @@ class DataBase:
                 if self.player.Token in dict:
                     self.TotalTrophies = 0
                     self.player.LowID = dict[str(self.player.Token)]["lowID"]
+                    self.player.IsFacebookLinked = dict[str(self.player.Token)]["isFBLinked"]
+                    self.player.FacebookID = dict[str(self.player.Token)]["facebookID"]
+                    self.player.FacebookToken = dict[str(self.player.Token)]["facebookToken"]
                     self.player.ClubID = dict[str(self.player.Token)]["clubID"]
                     self.player.ClubRole = dict[str(self.player.Token)]["clubRole"]
                     self.player.name = dict[str(self.player.Token)]["name"]
@@ -94,7 +96,7 @@ class DataBase:
                 read_data.close()
 
     def loadOtherAccount(self, plrLow_id):
-        with open('data.db', 'r') as read_data:
+        with open('Database/Player/data.db', 'r') as read_data:
             for line in read_data.readlines():
 
                 json_data = json.loads(line)
@@ -103,6 +105,9 @@ class DataBase:
                 for playertoken, info in dict.items():
                     if plrLow_id == info["lowID"]:
                         self.TotalTrophies = 0
+                        self.IsFacebookLinked = info["isFBLinked"]
+                        self.FacebookID = info["facebookID"]
+                        self.FacebookToken = info["facebookToken"]
                         self.ClubID = info["clubID"]
                         self.ClubRole = info["clubRole"]
                         self.name = info["name"]
@@ -188,6 +193,9 @@ class DataBase:
         data = {
             self.player.Token: {
                 "lowID": self.player.LowID,
+                "isFBLinked": 0,
+                "facebookID": self.player.FacebookID,
+                "facebookToken": self.player.FacebookToken,
                 "clubID": 0,
                 "clubRole": 0,
                 "name": self.player.name,
@@ -253,14 +261,105 @@ class DataBase:
             }
         }
         
-        with open('data.db', 'a+') as data_file:
+        with open('Database/Player/data.db', 'a+') as data_file:
             json.dump(data, data_file)  # writing data for new account
             data_file.write('\n')  # writing a new line
 
+    def createGameroomDB(self):
+        data = { 
+            self.player.roomID: {
+                "mapID": self.player.mapID,
+                "useGadget": 1,
+                "Player count": 1,
+                self.player.LowID: {
+                    "host": 1,
+                    "name": self.player.name,
+                    "Team": self.player.GameRoomTeam,
+                    "Ready": self.player.Ready,
+                    "brawlerID": self.player.brawlerID,
+                    "starpower": self.player.starpower,
+                    "gadget": self.player.gadget,
+                    "profileIcon": self.player.profileIcon,
+                    "namecolor": self.player.namecolor
+                }
+            }
+        }
+        
+        with open('Database/Gameroom/gameroom.db', 'a+') as data_file:
+            json.dump(data, data_file)  # writing data for new account
+            data_file.write('\n')  # writing a new line
+
+    def loadGameroom(self):
+        self.playerdata = {}
+        with open('Database/Gameroom/gameroom.db', 'r') as read_data:
+            for line in read_data.readlines():
+                json_data = json.loads(line)
+                dict = json.loads(json.dumps(json_data))  # loading and dumping json data from file
+                if str(self.player.roomID) in dict:
+                    self.mapID = dict[str(self.player.roomID)]["mapID"]
+                    self.useGadget = dict[str(self.player.roomID)]["useGadget"]
+                    self.playerCount = dict[str(self.player.roomID)]["Player count"]
+                    for Players,data in dict[str(self.player.roomID)].items():
+                        if Players != "Player count" and Players != "mapID" and Players != "useGadget":
+                            self.playerdata[Players] = {}
+                            self.playerdata[Players]["IsHost"] = data["host"]
+                            self.playerdata[Players]["name"] = data["name"]
+                            self.playerdata[Players]["Team"] = data["Team"]
+                            self.playerdata[Players]["Ready"] = data["Ready"]
+                            self.playerdata[Players]["LowID"] = Players
+                            self.playerdata[Players]["brawlerID"] = data["brawlerID"]
+                            self.playerdata[Players]["starpower"] = data["starpower"]
+                            if self.useGadget != 0:
+                                self.playerdata[Players]["gadget"] = data["gadget"]
+                            else:
+                                self.playerdata[Players]["gadget"] = 0
+                            self.playerdata[Players]["profileIcon"] = data["profileIcon"]
+                            self.playerdata[Players]["namecolor"] = data["namecolor"]
+                read_data.close()
+
+    def replaceGameroomValue(self, roomID, LowId, value_name, new_value, type):
+        list = []
+        if type != "removePlayer" and type != "deleteGameroom":
+            with open('gameroom.db', 'r+') as file:
+                for line in file.readlines():
+                    json_data = json.loads(line)
+                    dict = json.loads(json.dumps(json_data))  # loading and dumping json data from file
+                    for keys,values in dict.items():
+                        if keys != str(roomID):
+                            if type == "room":
+                                if roomID == self.player.roomID:
+                                    dict[str(self.player.roomID)][str(value_name)] = new_value
+                                    list.append(line)
+                            elif type == "player":
+                                dict[str(self.player.roomID)][str(LowId)][str(value_name)] = new_value
+                                list.append(dict)
+                    file.close()
+                    break
+
+        else:
+            with open('gameroom.db', 'r+') as file:
+                for line in file.readlines():
+                    json_data = json.loads(line)
+                    dict = json.loads(json.dumps(json_data))  # loading and dumping json data from file
+                    for keys,values in dict.items():
+                        if type == "removePlayer" and keys == value_name:
+                            values["Player count"] -= 1
+                            if dict[value_name][str(new_value)]["host"] == 1:
+                                dict.pop(value_name)
+                                list.append(dict)
+                            else:
+                                dict[value_name].pop(str(new_value))
+                                list.append(dict)
+                        file.close()
+                        break
+
+        with open('Database/Gameroom/gameroom.db', 'w') as o:
+            o.writelines('\n'.join(list))
+            o.close()    
 
 
     def replaceValue(self, value_name, new_value):
-        with open('data.db', 'r+') as file:
+        with open('Database/Player/data.db', 'r+') as file:
             list = []
             for line in file.readlines():
                 json_data = json.loads(line)
@@ -270,14 +369,14 @@ class DataBase:
                 list.append(dict)
                 file.close()
 
-        with open('data.db', 'w') as o:
+        with open('Database/Player/data.db', 'w') as o:
             for i in list:
                 o.write(str(i).replace("'", '"') + '\n')
             o.close()
 
     
     def replaceOtherValue(self, LowID, value_name, new_value):
-        with open('data.db', 'r+') as file:
+        with open('Database/Player/data.db', 'r+') as file:
             list = []
             for line in file.readlines():
                 json_data = json.loads(line)
@@ -289,16 +388,12 @@ class DataBase:
                 list.append(dict)
                 file.close()
 
-        with open('data.db', 'w') as o:
+        with open('Database/Player/data.db', 'w') as o:
             for i in list:
                 o.write(str(i).replace("'", '"') + '\n')
             o.close()
 
-
-
-
         # example usage: replaceValue(self, 'gems', 7777)
-
 
         # Alliance function
     
@@ -334,18 +429,18 @@ class DataBase:
             }
         }
 
-        with open('club.db', 'a+') as data_file:
+        with open('Database/Club/club.db', 'a+') as data_file:
             json.dump(data, data_file)  # writing data for new club
             data_file.write('\n')  # writing a new line
 
-        with open('chat.db', 'a+') as data_file:
+        with open('Database/Club/chat.db', 'a+') as data_file:
             json.dump(msgData, data_file)  # writing data for new club
             data_file.write('\n')  # writing a new line
 
     def loadClub(self, clubid):
         self.plrids = []
         self.clubidstr = str(clubid)
-        with open('club.db', 'r') as read_data:
+        with open('Database/Club/club.db', 'r') as read_data:
             for line in read_data.readlines():
                 json_data = json.loads(line)
                 dict = json.loads(json.dumps(json_data))
@@ -367,7 +462,7 @@ class DataBase:
     
 
     def replaceClubValue(self, target, inf1, inf2, inf3, inf4, inf5):
-        with open('club.db', 'r+') as file:
+        with open('Database/Club/club.db', 'r+') as file:
             list = []
             for line in file.readlines():
                 json_data = json.loads(line)
@@ -381,14 +476,14 @@ class DataBase:
                 list.append(dict)
                 file.close()
 
-        with open('club.db', 'w') as o:
+        with open('Database/Club/club.db', 'w') as o:
             for i in list:
                 o.write(str(i).replace("'", '"') + '\n')
             o.close()
 
     def CountClub(self, minMembers, maxMembers, clubType, maxListLength):
         self.AllianceCount = 0
-        with open('club.db', 'r') as read_data:
+        with open('Database/Club/club.db', 'r') as read_data:
             for club in read_data.readlines():
                 clubData = json.loads(club)
                 dict = json.loads(json.dumps(clubData))
@@ -400,7 +495,7 @@ class DataBase:
     def AddMember(self, AllianceID, PlayerID, PlayerName, Action):
         newData = []
         if Action == 0:
-            with open('club.db', 'r') as file:
+            with open('Database/Club/club.db', 'r') as file:
                 for club in file.readlines():
                     plrData = json.loads(club)
                     dict = json.loads(json.dumps(plrData)) # loading and dumping json data from file
@@ -409,7 +504,7 @@ class DataBase:
                             newData.append(club)
                     file.close()
 
-            with open('chat.db', 'r') as file:
+            with open('Database/Club/chat.db', 'r') as file:
                 for messages in file.readlines():
                     plrData = json.loads(messages)
                     dict = json.loads(json.dumps(plrData)) # loading and dumping json data from file
@@ -419,7 +514,7 @@ class DataBase:
                     file.close()
                                                                                                     
         elif Action == 1:
-            with open('club.db', 'r+') as file:
+            with open('Database/Club/club.db', 'r+') as file:
                 for line in file.readlines():
                     json_data = json.loads(line)
                     dict = json.loads(json.dumps(json_data))
@@ -432,7 +527,7 @@ class DataBase:
                     file.close()  
             
         elif Action == 2:
-            with open('club.db', 'r+') as file:
+            with open('Database/Club/club.db', 'r+') as file:
                 for line in file.readlines():
                     json_data = json.loads(line)
                     dict = json.loads(json.dumps(json_data))
@@ -444,12 +539,12 @@ class DataBase:
                     newData.append(json.dumps(dict)) 
                     file.close()        
 
-        with open('club.db', 'w') as o:
+        with open('Database/Club/club.db', 'w') as o:
             o.writelines('\n'.join(newData))
             o.close()       
             
     def GetMemberData(self, Low_id):
-        with open('data.db', 'r') as read_data:
+        with open('Database/Player/data.db', 'r') as read_data:
             for plrtoken in read_data.readlines():
                 plrData = json.loads(plrtoken)
                 dict = json.loads(json.dumps(plrData))
@@ -464,7 +559,7 @@ class DataBase:
                 read_data.close()
     
     def GetmsgCount(self, clubID):
-        with open('chat.db', 'r') as read_data:
+        with open('Database/Club/chat.db', 'r') as read_data:
             for line in read_data.readlines():
                 json_data = json.loads(line)
                 dict = json.loads(json.dumps(json_data))
@@ -475,7 +570,7 @@ class DataBase:
     def Addmsg(self, event, tick, Low_id, name, role, msg):
         self.updatedDict = []
         index = 0
-        with open('chat.db', 'r+') as file:
+        with open('Database/Club/chat.db', 'r+') as file:
             for line in file.readlines():
                 json_data = json.loads(line)
                 dict = json.loads(json.dumps(json_data))
@@ -493,7 +588,7 @@ class DataBase:
                 self.updatedDict.append(json.dumps(dict))            
                 file.close()
     
-        with open('chat.db', 'w') as o:
+        with open('Database/Club/chat.db', 'w') as o:
             o.writelines('\n'.join(self.updatedDict))
             o.write('\n')
             o.close()

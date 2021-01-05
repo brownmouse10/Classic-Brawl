@@ -1,7 +1,6 @@
 from Utils.Reader import BSMessageReader
 
 from Packets.Messages.Server.Friend.FriendListUpdateMessage import FriendListUpdateMessage
-from Packets.Messages.Server.Friend.AddFriendFailedMessage import AddFriendFailedMessage
 
 
 class AddFriend(BSMessageReader):

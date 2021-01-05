@@ -3,7 +3,7 @@ from string import ascii_uppercase
 import json
 
 from Logic.Player import Players
-from Database.DataBase import DataBase
+from Database.DatabaseManager import DataBase
 from Packets.Messages.Server.OutOfSyncMessage import OutOfSyncMessage
 
 from Utils.Reader import BSMessageReader

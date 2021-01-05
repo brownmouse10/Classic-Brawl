@@ -1,12 +1,13 @@
+from Utils.Config import Config
 import socket
 import time
 from threading import *
 
 from Logic.Device import Device
 from Logic.Player import Players
-from Database.DataBase import DataBase
 from Packets.Factory import packets
 
+packet_settings = Config.GetValue()
 
 def _(*args):
 	print('[INFO]', end=' ')
@@ -18,7 +19,6 @@ def _(*args):
 class Server:
 	Clients = {"ClientCounts": 0, "Clients": {}}
 	ThreadCount = 0
-
 	def __init__(self, ip: str, port: int):
 		self.server = socket.socket()
 		self.port = port
@@ -64,8 +64,9 @@ class ClientThread(Thread):
 					data = self.recvall(length)
 
 					if packet_id in packets:
-						print(f'Received packet! Id: {packet_id}')
 						message = packets[packet_id](self.client, self.player, data)
+						if packet_settings["ShowPacketsInLog"] == True:
+							print(f'Received packet! Id: {packet_id} Packet name: {packets[packet_id].__name__}')
 						message.decode()
 						message.process()
 
@@ -74,7 +75,7 @@ class ClientThread(Thread):
 							Server.Clients["ClientCounts"] = Server.ThreadCount
 							self.player.ClientDict = Server.Clients
 
-					else:
+					elif packet_settings["ShowPacketsInLog"] == True:
 						print(f'Packet not handled! Id: {packet_id}')
 
 				if time.time() - last_packet > 5:

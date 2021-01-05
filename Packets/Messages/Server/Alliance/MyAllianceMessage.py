@@ -1,4 +1,4 @@
-from Database.DataBase import DataBase
+from Database.DatabaseManager import DataBase
 import json
 from Utils.Writer import Writer
 

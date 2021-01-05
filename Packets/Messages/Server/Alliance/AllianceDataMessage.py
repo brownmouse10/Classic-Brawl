@@ -1,7 +1,7 @@
 from Logic.Player import Players
 from os import SEEK_CUR, curdir
-from Database.DataBase import DataBase
 from Utils.Writer import Writer
+from Database.DatabaseManager import DataBase
 import json
 
 

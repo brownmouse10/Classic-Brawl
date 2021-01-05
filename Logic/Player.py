@@ -18,6 +18,9 @@ class Players:
 	HighID = 0
 	LowID = 0
 	Token = None
+	IsFacebookLinked = 0
+	FacebookID = "None"
+	FacebookToken = "None"
 	boxID = 0
 	mapID = 7
 	roomID = 0

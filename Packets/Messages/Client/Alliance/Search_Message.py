@@ -20,7 +20,7 @@ class Search_Message(BSMessageReader):
 
     def process(self):
         self.AllianceCount = 0
-        with open('club.db', 'r') as read_data:
+        with open('Database/Club/club.db', 'r') as read_data:
             for club in read_data.readlines():
 
                 clubData = json.loads(club)

@@ -11,8 +11,13 @@ class OnPlay(BSMessageReader):
 
 
     def decode(self):
-        pass
+        self.read_Vint()
+        self.CardID = self.read_Vint()
+
+        self.read_Vint()
+        self.MapIndex = self.read_Vint()
+
+        print(self.CardID, self.MapIndex)
 
     def process(self):
         OutOfSyncMessage(self.client, self.player, "Multiplayer Isn't Sync Yet").send()
-        

@@ -10,7 +10,7 @@ from Packets.Messages.Server.Alliance.Events.AllianceJoinOkMessage import Allian
 from Packets.Messages.Server.Alliance.AllianceChatServerMessage import AllianceChatServerMessage
 
 from Logic.Player import Players
-from Database.DataBase import DataBase
+from Database.DatabaseManager import DataBase
 from Utils.Reader import BSMessageReader
 
 

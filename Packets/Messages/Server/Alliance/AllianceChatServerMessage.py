@@ -1,4 +1,4 @@
-from Database.DataBase import DataBase
+from Database.DatabaseManager import DataBase
 from Utils.Writer import Writer
 import json
 
@@ -11,7 +11,7 @@ class AllianceChatServerMessage(Writer):
         self.player = player
 
     def encode(self):
-        with open('chat.db', 'r') as read_data:
+        with open('Database/Club/chat.db', 'r') as read_data:
             for line in read_data.readlines():
                 
                 json_data = json.loads(line)

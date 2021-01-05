@@ -1,4 +1,4 @@
-from Database.DataBase import DataBase
+from Database.DatabaseManager import DataBase
 import json
 from Utils.Writer import Writer
 
@@ -18,7 +18,7 @@ class AllianceStreamMessage(Writer):
             DataBase.GetmsgCount(self, self.clubLowID)
             self.writeVint(self.MessageCount) # Message count
 
-            with open('chat.db', 'r') as read_data:
+            with open('Database/Club/chat.db', 'r') as read_data:
                 for line in read_data.readlines():
                     
                     json_data = json.loads(line)

@@ -1,5 +1,5 @@
 from Utils.Writer import Writer
-from Database.DataBase import DataBase
+from Database.DatabaseManager import DataBase
 from Utils.Helpers import Helpers
 
 

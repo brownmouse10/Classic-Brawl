@@ -1,7 +1,6 @@
-from Database.DataBase import DataBase
-
 from Packets.Messages.Server.Gameroom.TeamLeftMessage import TeamLeftMessage
 
+from Database.DatabaseManager import DataBase
 from Utils.Reader import BSMessageReader
 
 
@@ -17,4 +16,4 @@ class TeamLeaveMessage(BSMessageReader):
     def process(self):
         self.player.roomID = 0
         DataBase.replaceValue(self, 'roomID', self.player.roomID)
-        TeamLeftMessage(self.client, self.player).send()
+        TeamLeftMessage(self.client, self.player).sendWithLowID(self.player.LowID)

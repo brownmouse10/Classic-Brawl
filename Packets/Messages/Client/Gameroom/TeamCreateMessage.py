@@ -1,4 +1,6 @@
+from Database.DatabaseManager import DataBase
 from Packets.Messages.Server.Gameroom.TeamGameroomDataMessage import TeamGameroomDataMessage
+import random
 
 from Utils.Reader import BSMessageReader
 
@@ -34,4 +36,8 @@ class TeamCreateMessage(BSMessageReader):
             self.player.mapID = 167 # takedown
         elif self.mapID == 9:
             self.player.mapID = 174 # lone star
+            
+        self.player.roomID = random.randint(0, 2147483647)
+        DataBase.replaceValue(self, 'roomID', self.player.roomID)
+        DataBase.createGameroomDB(self)
         TeamGameroomDataMessage(self.client, self.player).send()

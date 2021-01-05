@@ -5,6 +5,7 @@ from Packets.Messages.Client.KeepAliveMessage import KeepAliveMessage
 # Login
 from Packets.Messages.Client.Login.ClientHelloMessage import ClientHelloMessage
 from Packets.Messages.Client.Login.LoginMessage import LoginMessage
+from Packets.Messages.Client.Login.GetDeviceToken import GetDeviceToken
 
 # Gameroom
 from Packets.Messages.Client.Gameroom.TeamCreateMessage import TeamCreateMessage
@@ -45,12 +46,15 @@ from Packets.Messages.Client.Alliance.Search_Message import Search_Message
 from Packets.Messages.Client.Friend.AddFriend import AddFriend
 from Packets.Messages.Client.Friend.AskForFriendListMessage import AskForFriendListMessage
 from Packets.Messages.Client.Friend.AskForFriendSuggestionsMessage import AskForFriendSuggestionsMessage
+from Packets.Messages.Client.Friend.FacebookConnect import FacebookConnect
+from Packets.Messages.Client.Friend.UnlinkFacebookAcount import UnlinkFacebookAcount
 
 packets = {
     10100: ClientHelloMessage,
     10101: LoginMessage,
     10108: KeepAliveMessage,
     10110: AnalyticsEventMessage,
+    10113: GetDeviceToken,
     18686: SetContentCreatorMessage,
     10212: SetNameMessage,
     10502: AddFriend,
@@ -61,6 +65,8 @@ packets = {
     14109: GoHomeFromOfflinePractiseMessage,
     14110: BattleEndMessage,
     14113: AskProfileMessage,
+    14201: FacebookConnect,
+    14211: UnlinkFacebookAcount,
 
     # Alliance
     14301: Create_Message,
